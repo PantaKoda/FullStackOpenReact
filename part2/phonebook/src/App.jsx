@@ -1,12 +1,10 @@
 import {useState, useEffect} from 'react'
-import _ from 'lodash';
 import personService from './services/persons'
 
 function Filter({handleFilter}) {
     return (
         <div>
             filter shown with <input onChange={handleFilter}/>
-
         </div>
     )
 }
@@ -32,45 +30,66 @@ function PersonForm(props) {
 }
 
 
-function Persons({filteredPersons}) {
+function Persons({filterInputValue, persons, setPersons}) {
+    const handleDelete = (id) => {
+        if (window.confirm("Do you really want to delete this entry?")) {
+            personService.deleteById(id)
+                .then(() => {
+                    setPersons(persons.filter(person => person.id !== id));
+                })
+                .catch(error => {
+                    console.error("There was an error deleting the entry", error);
+                });
+        }
+    };
 
     return (
         <>
-            {filteredPersons.map(person => (<div
-                key={person.id}>{person.name} {person.number}
-                <button onClick={handleDelete}>delete</button>
-            </div>))}
+            {persons.map(person => {
+                if (person.name.toLowerCase().includes(filterInputValue.toLowerCase())) {
+                    return (
+                        <div key={person.id}>
+                            {person.name} {person.number} {' '}
+                            <button onClick={() => handleDelete(person.id)}>
+                                delete
+                            </button>
+                        </div>
+                    );
+                }
+                return null;
+            })}
         </>
-
-    )
+    );
 }
 
 
 function App() {
 
     const [persons, setPersons] = useState([])
-    const [filteredPersons, setFilteredPersons] = useState([]);
     const [newName, setNewName] = useState('Bob')
     const [newNumber, setNewNumber] = useState('39-44-5323523')
+    const [filterValue, setFilterValue] = useState('')
 
     const addPerson = (event) => {
-        event.preventDefault()
-        if (persons.some(person => _.isEqual(person, {name: newName, number: newNumber, id: newName}))) {
+        event.preventDefault();
+
+        //Two entries can have the same name/number but diff id(id is given by the server)
+        //so check if the persons have same name/number for duplicates
+        if (persons.some(person => person.name === newName && person.number === newNumber)) {
             console.log('Person already exists');
             return;
         }
 
-
         personService.create({name: newName, number: newNumber})
-            .then(returnedPersons => {
-                setPersons(persons.concat({name: newName, number: newNumber, id: newName}))
-                setFilteredPersons(persons.concat({name: newName, number: newNumber, id: newName}))
-                setNewName('')
-                setNewNumber('')
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson));
+                setNewName('');
+                setNewNumber('');
             })
-
-
-    }
+            .catch(error => {
+                console.error("There was an error adding the new person", error);
+            });
+    };
 
     const handlePersonChange = (event) => {
         setNewName(event.target.value)
@@ -81,16 +100,11 @@ function App() {
     }
 
     const handleFilter = (event) => {
-        const filterValue = event.target.value.toLowerCase()
-        console.log(filterValue)
-        if (filterValue === "") {
-            setFilteredPersons(persons)
+        const filterInputValue = event.target.value.trim().toLowerCase()
+        if (filterInputValue === "") {
+            setFilterValue('')
         } else {
-            const filteredPersons = persons.filter(person =>
-                person.name.toLowerCase().includes(filterValue)
-            )
-
-            setFilteredPersons(filteredPersons)
+            setFilterValue(filterInputValue)
         }
     }
 
@@ -100,7 +114,6 @@ function App() {
         personService.getAll()
             .then(initialPersons => {
                 setPersons(initialPersons)
-                setFilteredPersons(initialPersons)
             })
     }
 
@@ -114,7 +127,7 @@ function App() {
                     handlePersonChange={handlePersonChange}
                     handlePhoneNumber={handlePhoneNumber}/>
         <h2>Numbers</h2>
-        <Persons filteredPersons={filteredPersons}/>
+        <Persons filterInputValue={filterValue} persons={persons} setPersons={setPersons}/>
     </div>)
 }
 
