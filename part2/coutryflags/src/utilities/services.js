@@ -11,7 +11,7 @@ async function storeCountryNames() {
 async function getCountryByName(countryName) {
     try {
         const countryRequest = await countryHandlers.getCountriesByName(countryName)
-        const {name, capital, region, subregion, languages, area, flags, population, latlng} = countryRequest
+        const {name, capital, region, subregion, languages, area, flags, population, cca2} = countryRequest
         return {
             name: name.common,
             capital,
@@ -21,7 +21,7 @@ async function getCountryByName(countryName) {
             area,
             flags: flags.svg,
             population,
-            latlng
+            cca2
         }
     } catch (error) {
         console.log("There was an error fetching country : ", countryName, error)
@@ -30,9 +30,9 @@ async function getCountryByName(countryName) {
 }
 
 
-async function currentWeatherData(LAT, LON, API_KEY) {
+async function currentWeatherData(LAT, LON, API_KEY, name, countryCode) {
 
-    const response = await countryHandlers.getCurrentWeather(LAT, LON, API_KEY)
+    const response = await countryHandlers.getCurrentWeather(LAT, LON, API_KEY, name, countryCode)
 
     const {weather, main, wind, sys} = response
     return {

@@ -54,7 +54,7 @@ export function SearchList({
             countriesClickTime,
             name,
             setCountriesClickTime,
-            async (name) => await countryServices.currentWeatherData(country.latlng[0], country.latlng[1], '252871d9986eac617bcc6690cbfd0d88')
+            async (name) => await countryServices.currentWeatherData('252871d9986eac617bcc6690cbfd0d88', country.capital, country.cca2)
         );
 
         // Add weather data to the country data

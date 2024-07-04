@@ -44,23 +44,30 @@ export default function CountryDetails({activeIndices, index, countriesCache}) {
                     </tbody>
                 </table>
             </div>
+
             <div className="flex items-center justify-center">
                 <img src={country.flags} alt="country flag" className="w-[200px] h-[100px] object-contain"/>
             </div>
-            <div className="flex flex-col items-center justify-center">
-                {country.weather.temp} <br/>
-                {country.weather.humidity}<br/>
-                {country.weather.sunrise}<br/>
-                {country.weather.sunset}<br/>
-                {country.weather.weather[0].description}<br/>
-                {country.weather.weather[0].main}<br/>
-                <img
-                    src={`https://openweathermap.org/img/wn/${country.weather.weather[0].icon}@2x.png`}
-                    alt="weather icon"
-                />
+            <div className="bg-amber-400 col-span-3 grid grid-cols-2 gap-4 p-4">
+                <h1 className="col-span-2 text-lg font-semibold text-center mb-4">Weather in {country.capital}</h1>
+                <div className="col-span-1">
+                    <p>Temperature: {country.weather.temp}°C</p>
+                    <p>Humidity: {country.weather.humidity}%</p>
+                    <p>Sunrise: {new Date(country.weather.sunrise * 1000).toLocaleTimeString()}</p>
+                    <p>Sunset: {new Date(country.weather.sunset * 1000).toLocaleTimeString()}</p>
+                    <p>Description: {country.weather.weather[0].description}</p>
 
-
+                </div>
+                <div className="col-span-1 flex justify-center items-center">
+                    <img
+                        src={`https://openweathermap.org/img/wn/${country.weather.weather[0].icon}@2x.png`}
+                        alt="weather icon"
+                        className="w-[100px] h-[100px] object-contain"
+                    />
+                </div>
             </div>
+
+
         </div>
     );
 }

@@ -30,9 +30,10 @@ async function getCountriesByName(name) {
 }
 
 
-async function getCurrentWeather(LAT, LON, API_KEY) {
+async function getCurrentWeather(API_KEY, name, countryCode) {
     try {
-        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric`)
+        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${name},${countryCode}&appid=${API_KEY}&units=metric`)
+        console.log(response)
         return response.data
     } catch (error) {
         console.log("There was an error fetching weather data :", error)
