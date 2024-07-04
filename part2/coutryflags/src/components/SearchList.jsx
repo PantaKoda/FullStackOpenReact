@@ -1,6 +1,7 @@
 import CountryDetails from "./CountryDetails";
 import countryServices from '../utilities/services'
 import {useEffect} from 'react'
+import utilities from '../utilities/utilities'
 
 export function SearchList({
                                countryNames,
@@ -8,7 +9,9 @@ export function SearchList({
                                setActiveIndices,
                                filterInput,
                                setCountriesCache,
-                               countriesCache
+                               countriesCache,
+                               setCountriesClickTime,
+                               countriesClickTime
                            }) {
 
 
@@ -23,23 +26,46 @@ export function SearchList({
         }
     }, [filterInput, setActiveIndices]);
 
-    const getCountry = async (name) => {
+    useEffect(() => {
+        console.log(countriesClickTime)
+        console.log(countriesCache)
+    }, [countriesClickTime, countriesCache])
 
-        //If it is open to request again
+    //Get data when hover over button
+    const getCountry = async (name) => {
+        const currentTime = new Date().getTime();
+
+        // If it is open to request again
         if (activeIndices.has(name)) {
-            return null
+            return null;
         }
+
         // Check if the country is already in the cache
         if (countriesCache.some(country => country.name === name)) {
             return;
         }
-        const country = await countryServices.getCountryByName(name)
 
-        setCountriesCache((previousState) => {
-            return [...previousState, country];
-        });
+        // Fetch country data
+        const country = await countryServices.getCountryByName(name);
 
-    }
+        // Fetch weather data independently
+        const weather = await utilities.checkWeatherApiTime(
+            currentTime,
+            countriesClickTime,
+            name,
+            setCountriesClickTime,
+            async (name) => await countryServices.currentWeatherData(country.latlng[0], country.latlng[1], '252871d9986eac617bcc6690cbfd0d88')
+        );
+
+        // Add weather data to the country data
+        const combinedData = {
+            ...country,
+            weather
+        };
+
+        // Cache the combined data
+        setCountriesCache(previousState => [...previousState, combinedData]);
+    };
 
     const handleClick = (index) => {
 

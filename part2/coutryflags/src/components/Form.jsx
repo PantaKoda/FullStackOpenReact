@@ -7,7 +7,9 @@ export default function Form({
                                  filterInput,
                                  setFilterInput,
                                  setCountriesCache,
-                                 countriesCache
+                                 countriesCache,
+                                 setCountriesClickTime,
+                                 countriesClickTime
                              }) {
 
 
@@ -27,6 +29,8 @@ export default function Form({
                         setFilterInput={setFilterInput}
                         setCountriesCache={setCountriesCache}
                         countriesCache={countriesCache}
+                        countriesClickTime={countriesClickTime}
+                        setCountriesClickTime={setCountriesClickTime}
                     />
                 </ul>
             </form>

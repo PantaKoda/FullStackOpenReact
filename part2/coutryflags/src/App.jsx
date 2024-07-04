@@ -8,6 +8,7 @@ function App() {
     const [countryNames, setCountryNames] = useState([]);
     const [filterInput, setFilterInput] = useState('');
     const [countriesCache, setCountriesCache] = useState([]);
+    const [countriesClickTime, setCountriesClickTime] = useState([]);
 
 
     useEffect(() => {
@@ -32,6 +33,8 @@ function App() {
                 setFilterInput={setFilterInput}
                 setCountriesCache={setCountriesCache}
                 countriesCache={countriesCache}
+                countriesClickTime={countriesClickTime}
+                setCountriesClickTime={setCountriesClickTime}
             />
         </div>
     );

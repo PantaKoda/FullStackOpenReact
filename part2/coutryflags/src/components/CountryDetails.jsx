@@ -48,7 +48,18 @@ export default function CountryDetails({activeIndices, index, countriesCache}) {
                 <img src={country.flags} alt="country flag" className="w-[200px] h-[100px] object-contain"/>
             </div>
             <div className="flex flex-col items-center justify-center">
-                {/* Add any additional content here */}
+                {country.weather.temp} <br/>
+                {country.weather.humidity}<br/>
+                {country.weather.sunrise}<br/>
+                {country.weather.sunset}<br/>
+                {country.weather.weather[0].description}<br/>
+                {country.weather.weather[0].main}<br/>
+                <img
+                    src={`https://openweathermap.org/img/wn/${country.weather.weather[0].icon}@2x.png`}
+                    alt="weather icon"
+                />
+
+
             </div>
         </div>
     );

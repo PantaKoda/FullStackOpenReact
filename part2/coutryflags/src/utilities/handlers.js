@@ -29,4 +29,15 @@ async function getCountriesByName(name) {
 
 }
 
-export default {getAllCountries, getCountriesByName}
+
+async function getCurrentWeather(LAT, LON, API_KEY) {
+    try {
+        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric`)
+        return response.data
+    } catch (error) {
+        console.log("There was an error fetching weather data :", error)
+        return {}
+    }
+}
+
+export default {getAllCountries, getCountriesByName, getCurrentWeather}
