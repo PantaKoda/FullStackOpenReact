@@ -13,6 +13,7 @@ function Filter({handleFilter}) {
 
 
 function PersonForm(props) {
+
     const {addPerson, newName, newNumber, handlePersonChange, handlePhoneNumber} = props
 
     return (
