@@ -3,6 +3,7 @@ import countryServices from '../utilities/services'
 import {useEffect} from 'react'
 import utilities from '../utilities/utilities'
 
+
 export function SearchList({
                                countryNames,
                                activeIndices,
@@ -54,7 +55,7 @@ export function SearchList({
             countriesClickTime,
             name,
             setCountriesClickTime,
-            async (name) => await countryServices.currentWeatherData('252871d9986eac617bcc6690cbfd0d88', country.capital, country.cca2)
+            async (name) => await countryServices.currentWeatherData(import.meta.env.VITE_API_KEY, country.capital, country.cca2)
         );
 
         // Add weather data to the country data
